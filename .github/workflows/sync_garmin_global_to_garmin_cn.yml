@@ -1,13 +1,13 @@
-名字: 同步Garmin Global到Garmin CN
+name: Sync Garmin Global to Garmin CN
 
-在:
+on:
   workflow_dispatch:
-时间表:
+  schedule:
     #  每1小时检查一次
-    - cron（通常读作“克朗”）是一个用于: "0 * * * *"
+    - cron: "0 * * * *"
 
-环境:
-  #请更改为自己的配置。
+env:
+  # please change to your own config.
   RQ_COOKIE: ${{ secrets.RQ_COOKIE }}
   RQ_CSRF_TOKEN: ${{ secrets.RQ_CSRF_TOKEN }}
   RQ_USERID: ${{ secrets.RQ_USERID }}
@@ -20,21 +20,21 @@
   GARMIN_GLOBAL_USERNAME: ${{ secrets.GARMIN_GLOBAL_USERNAME }}
   GARMIN_GLOBAL_PASSWORD: ${{ secrets.GARMIN_GLOBAL_PASSWORD }}
 
-工作:
-建筑:
+jobs:
+  build:
     runs-on: ubuntu-latest
-名字: 同步Garmin Global到Garmin CN
-权限:
-内容: 写
-步骤:
-      - 用途: actions/checkout@v3
-      - 用途: actions/setup-node@v3
-与:
+    name: Sync Garmin Global to Garmin CN
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
           node-version: "18"
-贮存物: "yarn"
-跑用途纱线 sync_global: 与
-      - 跑: 纱线 sync_global
+          cache: "yarn"
+      - run: yarn
+      - run: yarn sync_global
         timeout-minutes: 5
-      - 跑: stefanzweifel/git-auto-commit-action@v5
-纱:
-          commit_message: 保存Garmin会话
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Save Garmin Session
